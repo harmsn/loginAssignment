@@ -7,7 +7,7 @@ import { useLocation,useNavigate } from "react-router-dom"
 import 'antd/dist/antd.css'
 import { connect } from 'react-redux'
 import { addProfile } from '../Store/Actions'
-
+import { error,success } from '../Utils/CommonFunctions'
 
 function Signup({dispatch}) {
   
@@ -46,21 +46,22 @@ function Signup({dispatch}) {
         if((res?.data?.success)){
           AuthService.signUp(firstName,referal,email,localStorage.getItem('token')).then((res)=>{
             dispatch(addProfile(res?.data?.results?.user));
-            console.log(res?.data);
             navigate('/profile');
           }).catch(err=>{
-            console.log(err);
+            error(err);
           })
+        }else{
+          error(res?.data?.message);
         }
       }).catch(err=>{ 
-        console.log(err);
+        error(err);
       });
     }else{
       AuthService.signUp(firstName,referal,email,localStorage.getItem('token')).then((res)=>{
         dispatch(addProfile(res?.data?.results?.user));
         navigate('/profile');
       }).catch(err=>{
-        console.log(err);
+        error(err);
       })
     }
   };

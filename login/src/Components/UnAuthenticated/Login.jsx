@@ -1,12 +1,13 @@
 import {useState,useEffect} from 'react'
 import InputField from "../Reusable/InputField";
 import { patternEmail } from '../Utils/Validations';
-import { Form, Button} from 'antd';
+import { Form, Button } from 'antd';
 import AuthService from '../Services/login';
 import { useNavigate } from "react-router-dom";
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux'
 import { addProfile } from '../Store/Actions'
+import { error,success,debounce } from '../Utils/CommonFunctions'
 
 function Login({ dispatch }) {
   
@@ -23,7 +24,7 @@ function Login({ dispatch }) {
       setToken(res?.data?.results?.token)
       setStep(true);
     }).catch(err=>{
-      console.log(err);
+      error(err);
     })
   };
 
@@ -36,7 +37,7 @@ function Login({ dispatch }) {
         navigate('/signup',{ state: { email: email } });
       }
     }).catch(err=>{
-      console.log(err);
+      error(err);
     })
   }
 
@@ -50,9 +51,13 @@ function Login({ dispatch }) {
 
   const resendOtp = () => {
     AuthService.resendOtp(localStorage.getItem('token'),email).then(res=>{
-      console.log(res?.data?.success);
+      if(!res?.data?.success){
+        error(res?.data?.message);
+      }else{
+        success(res?.data?.message)
+      }
     }).catch(err=>{
-      console.log(err);
+      error(err);
     })
   }
 
@@ -90,7 +95,7 @@ function Login({ dispatch }) {
           <Button type="primary" htmlType="submit" disabled={flagValid ? false : true}>
             Enter OTP
           </Button>
-          <Button onClick = {resendOtp}> Resend OTP</Button>
+          <Button onClick = {debounce(resendOtp,1000)}> Resend OTP</Button>
         </Form>}
       </div>
   );
