@@ -2,7 +2,7 @@ import {useState,useEffect} from 'react'
 import { connect } from 'react-redux'
 import { Button } from 'antd';
 import AuthService from '../Services/login';
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Navigate } from "react-router-dom";
 import { error} from '../Utils/CommonFunctions'
 
 function Profile(props) {
@@ -20,10 +20,11 @@ function Profile(props) {
 
   return (
     <>
-     <div><p>{userProfile?.firstName}</p>
+     {localStorage.getItem('token') !== null ?  <div><p>{userProfile?.firstName}</p>
       <p>{userProfile?.email}</p>
+      <p>{userProfile?.phoneNumber}</p>
       <p>{userProfile?.expertise}</p>
-      <Button onClick={logOut}>Logout</Button></div>
+      <Button onClick={logOut}>Logout</Button></div>: <Navigate to='/login'/>}
     </>
   );
 }

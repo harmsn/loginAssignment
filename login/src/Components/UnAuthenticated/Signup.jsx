@@ -3,7 +3,7 @@ import InputField from "../Reusable/InputField"
 import { patternPhone } from '../Utils/Validations'
 import { Form, Button} from 'antd'
 import AuthService from '../Services/login'
-import { useLocation,useNavigate } from "react-router-dom"
+import { useLocation,useNavigate,Navigate } from "react-router-dom"
 import 'antd/dist/antd.css'
 import { connect } from 'react-redux'
 import { addProfile } from '../Store/Actions'
@@ -21,7 +21,7 @@ function Signup({dispatch}) {
   let navigate = useNavigate();
 
   useEffect(()=>{
-    if(firstName!==''&&(referal.length===6||referal.length===0)&&phone.length===10&&phone.match(patternPhone)){
+    if(firstName!==''&&(referal.length===6||referal.length===0)){
       setFlagValid(true);
     }else{
       setFlagValid(false);
@@ -67,23 +67,23 @@ function Signup({dispatch}) {
   };
 
   return (
-    <div>
-      Signup
-      <div>
-        <Form
-        name="EmailForm"
-        onFinish={onFinish}
-        autoComplete="off"
-        >
-          <InputField placeholder={"Enter First Name"} name={firstName} onChange={e => {handleChange(e,1)}} value={firstName} type={"text"}/>
-          <InputField placeholder={"Enter Phone"} name={phone} onChange={e => handleChange(e,3)} value={phone} type={"text"}/>
-          <InputField placeholder={"Enter Referal Code"} name={referal} onChange={e => handleChange(e,4)} value={referal} type={"text"}/>
-          <Button type="primary" htmlType="submit" disabled={flagValid ? false : true}>
-            Signup
-          </Button>
-        </Form> 
-      </div>
-    </div>
+    <>
+      {localStorage.getItem('token') !==null ? 
+        <div>
+          <Form
+          name="EmailForm"
+          onFinish={onFinish}
+          autoComplete="off"
+          >
+            <InputField placeholder={"Enter First Name"} name={firstName} onChange={e => {handleChange(e,1)}} value={firstName} type={"text"}/>
+            <InputField placeholder={"Enter Referal Code"} name={referal} onChange={e => handleChange(e,4)} value={referal} type={"text"}/>
+            <Button type="primary" htmlType="submit" disabled={flagValid ? false : true}>
+              Signup
+            </Button>
+          </Form> 
+        </div> : <Navigate to="/login"/>
+      }
+    </>
   );
 }
 
